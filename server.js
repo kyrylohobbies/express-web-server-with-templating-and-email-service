@@ -14,7 +14,7 @@ let errMsg = '';
 
 const contactFormRenewal = setInterval(()=>{
     contactFormCount = 0;
-}, 60000);
+}, day);
 
 emailjs.init({
     publicKey: PUBLIC_KEY
