@@ -9,10 +9,10 @@ $(document).ready(function() {
         });
         $.post('/contact', postForm, function(data){
             if(data==='success'){
-                window.location.replace("http://localhost:3000/thanks");
+                window.location.replace("https://tropic-travels.cyclic.app/thanks");
             }
             if(data==='error'){
-                window.location.replace("http://localhost:3000/error");
+                window.location.replace("https://tropic-travels.cyclic.app/error");
             }
         });
     });
