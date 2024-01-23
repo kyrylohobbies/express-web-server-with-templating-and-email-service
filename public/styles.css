@@ -1,0 +1,59 @@
+:root {
+    --navbar: 56px;
+    --view-height: 100%;
+    --footer: 120px;
+}
+
+body {
+    background-image: url("bg.webp");
+    font-family: 'Roboto', 'Arial';
+    margin: auto;
+}
+
+.current-page {
+    font-weight: bold;
+}
+
+footer {
+    border-top: 1px solid #bbb;
+    padding: 1em;
+    min-height: fit-content;
+}
+
+/* #socials, #copyright {
+    width: fit-content;
+} */
+
+.bi {
+    font-size: 3em;
+    color:black;
+}
+
+a {
+    padding: 0px 10px;
+}
+
+a, a:visited, a:hover, a:active {
+    color: black;
+}
+
+.page {
+    min-height: 94vh;
+}
+
+.navbar {
+    min-height: 6vh;
+}
+
+.nav-color {
+    background: linear-gradient(#eee,#aaa) !important;
+}
+
+.whitebox {
+    background-color: white;
+    border-radius: 12px;
+}
+
+.carousel-inner img {
+    aspect-ratio: 4/3;
+}

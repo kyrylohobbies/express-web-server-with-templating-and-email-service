@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="page">
+        <h1 class="d-flex justify-content-center p-5 ease-in" style="display:none;">CONTACT FORM</h1>
+        <div class="whitebox p-lg-5 p-md-4 p-sm-3 mb-5 row">
+            <div class="ease-in" style="display:none;">
+                <p>    To get in touch with this travel agency, you can fill out the form provided. Start by entering your first and last name, followed by your email address. Next, describe your budget and the destination you would like to travel to. This will help the agency understand your preferences and tailor their services accordingly. Once you have filled out the form, click submit, and the agency will contact you using the provided email address.</p>
+            </div>
+            <div class="pt-5 ease-in" style="display:none;">
+                <form id="contact" action="/contact" method="post">
+                    <div class="mb-3">
+                        <label for="FirstNameInput" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="FirstNameInput" name="fname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="LastNameInput" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="LastNameInput" name="lname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="PhoneInput" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="PhoneInput" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="EmailInput" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="EmailInput" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="TextArea" class="form-label">Message</label>
+                        <textarea class="form-control" id="TextArea" rows="6" name="msg" required></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end pt-2">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
