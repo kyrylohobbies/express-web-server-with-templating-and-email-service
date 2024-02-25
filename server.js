@@ -7,7 +7,9 @@ const emailjs = require('@emailjs/nodejs');
 dotenv.config();
 const { PUBLIC_KEY, SERVICE_ID, TEMPLATE_ID } = process.env;
 const fs = require('fs');
-const { resolve } = require('path');
+
+const jwt = require('jsonwebtoken');
+const { KEY, JWTSECRET, JWTEXPIRY } = process.env;
 
 const dailyQuota = 6; //max form submissions per day
 const day = 1000 * 60 * 60 * 24; //24 hours
@@ -86,6 +88,37 @@ function readContent() {
     });
 } */
 
+async function checkAuth(token) {
+    const tokenStr = String(token);
+    try {
+        const decodedToken = await jwt.verify(token, JWTSECRET);
+        console.log('WHO IS THE USER', decodedToken.user);
+        if(decodedToken.user === 'owner'){
+            console.log('In the true');
+            return true;
+        } else {
+            console.log('In the false');
+            return false;
+        }  
+    } catch(error){
+        throw error
+    }
+};
+
+function merge(target, source){
+    return new Promise((resolve,reject)=>{
+        try {
+            let result = [];
+            source.data.forEach((source, i) => {
+                result.push(Object.assign(target.data[i], source));
+            });
+            resolve(result);
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
 function mergeUpdate(stock, content) {
     let result = [];
     stock.data.forEach((stock, i) => {
@@ -128,6 +161,22 @@ app.get('/',(req, res)=>{
     res.redirect('/home');
 });
 
+app.get('/login', (req,res)=>{
+    res.render('login');
+})
+
+app.post('/login', (req, res)=>{
+    if(req.body.password == KEY){
+        const token = jwt.sign({ user: 'owner' }, JWTSECRET, { expiresIn: JWTEXPIRY });
+        console.log('CORRECT PASSWORD');
+        res.json({ status: 'success' , token: token });
+    } else {
+        console.log('WRONG PASSWORD');
+        errMsg = 'WRONG PASSWORD';
+        res.json({ status: 'error' });
+    }
+})
+
 app.get('/home',(req, res)=>{
     res.render('home');
 });
@@ -147,21 +196,31 @@ app.get('/read',(req,res)=>{
     })
 });
 
-app.get('/update',(req,res)=>{
-    readStock().then(stock=>{
-        readContent().then(content=>{
-            const data = mergeUpdate(stock, content);
-            console.log('update page data', data);
-            res.render('update', { data: data });
-        }).catch(err=>{
-            throw err;
-        })
-        
-    }).catch(err=>{
-        console.log(err);
-        errMsg = 'data could not be read.'
+app.get('/update', async (req,res)=>{
+    try {
+        const flag = await checkAuth(req.query.token);
+        if(flag===true){
+            console.log('OVER HERE NOW');
+            readStock().then(stock=>{
+                readContent().then(content=>{
+                    const data = mergeUpdate(stock, content);
+                    console.log('update page data', data);
+                    res.render('update', { data: data });
+                }).catch(err=>{
+                    throw err;
+                })
+            }).catch(err=>{
+                throw err;
+            })
+        } else {
+            throw Error('Not Authorized');
+        }
+
+    } catch(err){
+        errMsg = err.message;
         res.render('error');
-    })
+    }
+    
 });
 /* * * * * * * */
 app.post('/update', (req,res)=>{
@@ -192,20 +251,6 @@ app.get('/merged', (req,res)=>{
         res.send('error');
     });;
 });
-
-function merge(target, source){
-    return new Promise((resolve,reject)=>{
-        try {
-            let result = [];
-            source.data.forEach((source, i) => {
-                result.push(Object.assign(target.data[i], source));
-            });
-            resolve(result);
-        } catch (err) {
-            reject(err);
-        }
-    });
-};
 
 app.get('/contact',(req, res)=>{
     res.render('contact');

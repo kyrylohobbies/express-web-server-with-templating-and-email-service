@@ -46,6 +46,38 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#login').on('submit', function(event){
+        event.preventDefault();
+        const loginForm = { [this.password.name]: this.password.value };
+        //console.log(loginForm);
+
+        $.post('/login', loginForm, function(data){
+            if(data.status==='success'){
+                sessionStorage.setItem('token', data.token);
+                console.log('WE HERE');
+                const path = 'http://localhost:3000/update' + '?token=' + sessionStorage.getItem('token');
+                window.location.replace(path);
+            }
+            if(data.status==='error'){
+                window.location.replace("http://localhost:3000/error");
+            } 
+            
+            console.log(sessionStorage.getItem("token"));
+            
+        });
+    });
+
+    /* $.ajax({
+        url: '/update',
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer t-7614f875-8423-4f20-a674-d7cf3096290e');
+        },
+        data: {},
+        success: function () { },
+        error: function () { },
+    }); */
  
 
 });
