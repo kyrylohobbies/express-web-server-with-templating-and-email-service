@@ -23,4 +23,29 @@ $(document).ready(function() {
             $('.whitebox').removeClass('p-3');
         }
     });
+
+    /* Experimental */
+
+    $('#availability').on('submit', function(event){
+        event.preventDefault();
+        const preForm = $(this).serializeArray();
+        var postForm = {};
+        preForm.forEach(formInput => {
+            postForm = {...postForm, [formInput.name]: formInput.value }
+        });
+        console.log(postForm);
+
+        
+        $.post('/update', postForm, function(data){
+            if(data==='success'){
+                console.log('WE HERE');
+                window.location.replace("http://localhost:3000/merged");
+            }
+            if(data==='error'){
+                window.location.replace("http://localhost:3000/error");
+            }
+        });
+    });
+ 
+
 });

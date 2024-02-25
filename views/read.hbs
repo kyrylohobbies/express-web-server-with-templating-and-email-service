@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="page pt-5">
+        <h1 class="d-flex justify-content-center pb-5 ease-in" style="display:none;">Reading Availability</h1>
+        {{#each data}}
+        <div class="whitebox p-lg-5 p-md-4 p-sm-3 mb-5 row">
+            <div class="col-lg-6">
+                <h3>{{ this.title }}</h3>
+            </div>
+            <div class="col-lg-6">
+                <h3>{{ this.ava }}</h3>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>

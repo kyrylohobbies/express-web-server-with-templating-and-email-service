@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="page pt-5">
+        <form id="availability">
+            <div class="row">
+                <div class="col">
+                    <h1 class="d-flex justify-content-center  ease-in" style="display:none;">UPDATING Availability </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-center pb-5">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </div>
+            
+            {{#each data}}
+            <div class="whitebox p-lg-5 p-md-4 p-sm-3 mb-5 row">
+                <div class="col-lg-4">
+                    <h3>{{ this.img }}</h3>
+                </div>
+                <div class="col-lg-4">
+                    <h3>{{ this.title }}</h3>
+                </div>
+                <div class="col-lg-4">
+                    <label for="{{@index}}">Current: {{ this.stock }}</label>
+                    <select id="{{@index}}" name="{{@index}}" form="availability">
+                        <option></option>
+                        <option value="AVAILABLE">AVAILABLE</option>
+                        <option value="UNAVAILABLE">UNAVAILABLE</option>
+                    </select>
+                </div>
+            </div>
+            {{/each}}
+        </form>
+    </div>
+</div>

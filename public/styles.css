@@ -57,3 +57,13 @@ a, a:visited, a:hover, a:active {
 .carousel-inner img {
     aspect-ratio: 4/3;
 }
+
+.test-border {
+    border: 2px solid #aaa;
+    width: fit-content;
+    padding: 20px;
+}
+
+.abc {
+    margin: auto;
+}

@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "id": "0",
+            "img": "images/photo_1.jpeg",
+            "title": "Sample 1",
+            "description": "Text description 1"
+        },
+        {
+            "id": "1",
+            "img": "images/photo_2.jpeg",
+            "title": "Sample 2",
+            "description": "Text description 2"
+        },
+        {
+            "id": "2",
+            "img": "images/photo_3.jpeg",
+            "title": "Sample 3",
+            "description": "Text description 3"
+        },
+        {
+            "id": "3",
+            "img": "images/photo_4.jpeg",
+            "title": "Sample 4",
+            "description": "Text description 4"
+        }
+    ]
+}

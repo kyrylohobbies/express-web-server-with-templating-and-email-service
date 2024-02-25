@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const emailjs = require('@emailjs/nodejs');
 dotenv.config();
 const { PUBLIC_KEY, SERVICE_ID, TEMPLATE_ID } = process.env;
+const fs = require('fs');
+const { resolve } = require('path');
 
 const dailyQuota = 6; //max form submissions per day
 const day = 1000 * 60 * 60 * 24; //24 hours
@@ -27,6 +29,74 @@ const limitFormSubmissions = rateLimit({
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
+
+function readStock(){
+    return new Promise(function(resolve, reject){
+        fs.readFile('./data/stock.json', 'utf-8', (err, jsonString) => {
+            if(err){
+                reject(err);
+            } else {
+                try {
+                    const data = JSON.parse(jsonString);
+                    resolve(data);
+                    console.log(data);
+                } catch(err) {
+                    reject(err);
+                }          
+            }
+        });
+    });
+};
+
+function updateStock(form){
+    return new Promise(function(resolve, reject){
+        const result = Object.entries(form).map(([key, value]) => ({ ['stock']: value }));
+        fs.writeFile('./data/stock.json', JSON.stringify({data:result}, null, 2), err => {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log('File successfully written!');
+            }
+        });
+    });
+};
+
+function readContent() {
+    return new Promise(function(resolve, reject){
+        fs.readFile('./data/content.json', 'utf-8', (err, jsonString) => {
+            if(err){
+                reject(err);
+            } else {
+                try {
+                    const data = JSON.parse(jsonString);
+                    resolve(data);
+                } catch(err) {
+                    reject(err);
+                }          
+            }
+        });
+    });
+};
+
+/* function mergeSelectedProperties(source, target, keysToMerge) {
+    keysToMerge.forEach(key => {
+        if (source.hasOwnProperty(key)) {
+            target[key] = source[key];
+        }
+    });
+} */
+
+function mergeUpdate(stock, content) {
+    let result = [];
+    stock.data.forEach((stock, i) => {
+        result.push({
+            img: content.data[i].img,
+            title: content.data[i].title,
+            stock: stock.stock
+        });
+    });
+    return result
+};
 
 const app = express();
 
@@ -66,6 +136,77 @@ app.get('/media',(req, res)=>{
     res.render('media');
 });
 
+app.get('/read',(req,res)=>{
+    readStock().then(data=>{
+        console.log(data.data);
+        res.render('read', { data: data.data });
+    }).catch(err=>{
+        console.log(err);
+        errMsg = 'data could not be read.'
+        res.render('error');
+    })
+});
+
+app.get('/update',(req,res)=>{
+    readStock().then(stock=>{
+        readContent().then(content=>{
+            const data = mergeUpdate(stock, content);
+            console.log('update page data', data);
+            res.render('update', { data: data });
+        }).catch(err=>{
+            throw err;
+        })
+        
+    }).catch(err=>{
+        console.log(err);
+        errMsg = 'data could not be read.'
+        res.render('error');
+    })
+});
+/* * * * * * * */
+app.post('/update', (req,res)=>{
+    updateStock(req.body).then(()=>{
+        console.log('updated');
+    }).catch(err=>{
+        console.log(err);
+        errMsg = 'data could not be read.'
+        res.send('error');
+    });
+    res.send('success');
+});
+
+app.get('/merged', (req,res)=>{
+    readStock().then(async source=>{
+        readContent().then(async target=>{
+            const returnedTarget = await merge(target, source);
+            console.log('Here.');
+            console.log(returnedTarget);
+            res.render('merged', {data: returnedTarget});
+        }).catch(err=>{
+            throw err;
+        })
+
+    }).catch(err=>{
+        console.log(err);
+        errMsg = 'data could not be read.'
+        res.send('error');
+    });;
+});
+
+function merge(target, source){
+    return new Promise((resolve,reject)=>{
+        try {
+            let result = [];
+            source.data.forEach((source, i) => {
+                result.push(Object.assign(target.data[i], source));
+            });
+            resolve(result);
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
 app.get('/contact',(req, res)=>{
     res.render('contact');
 });
@@ -99,3 +240,4 @@ app.get('/thanks',(req, res)=>{
 });
 
 app.listen(3000, console.log('SERVER RUNNING'));
+
