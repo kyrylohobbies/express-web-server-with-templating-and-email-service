@@ -6,7 +6,8 @@ const bodyParser = require('body-parser');
 const emailjs = require('@emailjs/nodejs');
 dotenv.config();
 const { PUBLIC_KEY, SERVICE_ID, TEMPLATE_ID } = process.env;
-const fs = require('fs');
+//const fs = require('fs');
+const fs = require('@cyclic.sh/s3fs/promises');
 
 const jwt = require('jsonwebtoken');
 const { KEY, JWTSECRET, JWTEXPIRY } = process.env;
