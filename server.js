@@ -11,6 +11,7 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const { KEY, JWTSECRET, JWTEXPIRY } = process.env;
 
+
 const dailyQuota = 6; //max form submissions per day
 const day = 1000 * 60 * 60 * 24; //24 hours
 let contactFormCount = 0;
@@ -169,7 +170,7 @@ app.post('/login', (req, res)=>{
     if(req.body.password == KEY){
         const token = jwt.sign({ user: 'owner' }, JWTSECRET, { expiresIn: JWTEXPIRY });
         console.log('CORRECT PASSWORD');
-        res.json({ status: 'success' , token: token });
+        res.json({ status: 'success', token: token });
     } else {
         console.log('WRONG PASSWORD');
         errMsg = 'WRONG PASSWORD';
@@ -220,7 +221,7 @@ app.get('/update', async (req,res)=>{
         errMsg = err.message;
         res.render('error');
     }
-    
+
 });
 /* * * * * * * */
 app.post('/update', (req,res)=>{
