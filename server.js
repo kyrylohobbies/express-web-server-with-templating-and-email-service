@@ -7,12 +7,13 @@ const emailjs = require('@emailjs/nodejs');
 dotenv.config();
 const { PUBLIC_KEY, SERVICE_ID, TEMPLATE_ID } = process.env;
 //const fs = require('fs');
-const { CYCLIC_BUCKET_NAME } = process.env;
-const fs = require('@cyclic.sh/s3fs/promises')(CYCLIC_BUCKET_NAME);
+const fs = require('@cyclic.sh/s3fs');
 
 const jwt = require('jsonwebtoken');
 const { KEY, JWTSECRET, JWTEXPIRY } = process.env;
 
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3();
 
 const dailyQuota = 6; //max form submissions per day
 const day = 1000 * 60 * 60 * 24; //24 hours
