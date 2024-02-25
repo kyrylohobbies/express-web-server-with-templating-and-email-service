@@ -7,7 +7,8 @@ const emailjs = require('@emailjs/nodejs');
 dotenv.config();
 const { PUBLIC_KEY, SERVICE_ID, TEMPLATE_ID } = process.env;
 //const fs = require('fs');
-const fs = require('@cyclic.sh/s3fs/promises');
+const { CYCLIC_BUCKET_NAME } = process.env;
+const fs = require('@cyclic.sh/s3fs/promises')(CYCLIC_BUCKET_NAME);
 
 const jwt = require('jsonwebtoken');
 const { KEY, JWTSECRET, JWTEXPIRY } = process.env;
